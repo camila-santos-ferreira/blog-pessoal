@@ -14,10 +14,10 @@ public class UserDetailsImpl implements UserDetails {
 	private String userName;
 	private String password;
 
-	public UserDetailsImpl(Usuario user) {
+	public UserDetailsImpl(Usuario usuario) {
 		super();
-		this.userName = user.getUsuario();
-		this.password = user.getSenha();
+		this.userName = usuario.getUsuario();
+		this.password = usuario.getSenha();
 	}
 	
 	public UserDetailsImpl() {} 

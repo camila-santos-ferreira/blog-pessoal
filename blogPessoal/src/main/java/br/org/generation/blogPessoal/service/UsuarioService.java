@@ -42,10 +42,10 @@ public class UsuarioService {
 		return Optional.of(userRepository.save(usuario));
 	}
 	
-		public Optional<Usuario> atualizarUsuario(Usuario usuario){
+		public Optional<Usuario> atualizarUsuario(Usuario usuarioLogin){
 		
-		if(userRepository.findById(usuario.getId()).isPresent()) {
-			int idade = Period.between(usuario.getDataNascimento(), LocalDate.now()).getYears();
+		if(userRepository.findById(usuarioLogin.getId()).isPresent()) {
+			int idade = Period.between(usuarioLogin.getDataNascimento(), LocalDate.now()).getYears();
 			
 			if(idade < 18)
 				throw new ResponseStatusException(
@@ -53,10 +53,10 @@ public class UsuarioService {
 					
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			
-			String senhaEncoder = encoder.encode(usuario.getSenha());
-			usuario.setSenha(senhaEncoder);
+			String senhaEncoder = encoder.encode(usuarioLogin.getSenha());
+			usuarioLogin.setSenha(senhaEncoder);
 			
-			return Optional.of(userRepository.save(usuario));
+			return Optional.of(userRepository.save(usuarioLogin));
 		
 		} else {
 			throw new ResponseStatusException(
@@ -66,23 +66,23 @@ public class UsuarioService {
 	}
 	
 	
-	public Optional<UserLogin> Logar(Optional<UserLogin> user) {
+	public Optional<UserLogin> Logar(Optional<UserLogin> userLogin) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		Optional<Usuario> usuario = userRepository.findByUsuario(user.get().getUsuario());
+		Optional<Usuario> usuario = userRepository.findByUsuario(userLogin.get().getUsuario());
 		
 		if(usuario.isPresent()) {
-			if(encoder.matches(user.get().getSenha(), usuario.get().getSenha())) {
+			if(encoder.matches(userLogin.get().getSenha(), usuario.get().getSenha())) {
 			
-			String auth = user.get().getUsuario() + ":" + user.get().getSenha();
-			byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCIII")));
+			String auth = userLogin.get().getUsuario() + ":" + userLogin.get().getSenha();
+			byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
 			String authHeader = "Basic " + new String(encodeAuth);
 			
-			user.get().setId(usuario.get().getId());
-			user.get().setNome(usuario.get().getNome());
-			user.get().setSenha(usuario.get().getSenha());
-			user.get().setToken(authHeader);
+			userLogin.get().setId(usuario.get().getId());
+			userLogin.get().setNome(usuario.get().getNome());
+			userLogin.get().setSenha(usuario.get().getSenha());
+			userLogin.get().setToken(authHeader);
 			
-			return user;
+			return userLogin;
 			
 		}
 	
