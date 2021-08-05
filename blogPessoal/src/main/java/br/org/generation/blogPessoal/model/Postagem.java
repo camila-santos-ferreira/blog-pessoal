@@ -15,29 +15,49 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/* Informando que uma classe também é uma entidade. 
+ * A JPA estabelecerá a ligação entre a entidade e uma tabela de mesmo nome no banco de dados, onde os dados de
+ * objetos desse tipo poderão ser persistidos.
+ * Uma entidade representa, na Orientação a Objetos, uma tabela do banco de dados, e cada instância dessa entidade
+ * representa uma linha dessa tabela.
+ */
 @Entity
+// Atribuindo um nome para a tabela
 @Table(name = "postagem")
 public class Postagem {
 	
+	// Primary key
 	@Id
+	/* Definindo que o campo será gerado automaticamente pelo banco de dados e o identity indica que o campo seguirá
+	 * com base no último registro. 
+	 */
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	// Indicando que o campo não pode ser nulo
 	@NotNull
+	// Definindo o tamanho mínimo e máximo de um campo
 	@Size(min = 5, max = 100)
 	private String titulo;
 	
+	// Indicando que o campo não pode ser nulo
 	@NotNull
+	// Definindo o tamanho mínimo e máximo de um campo
 	@Size(min = 10, max = 500)
 	private String texto;
 	
+	// Indica que o atributo receberá uma data e hora do sistema
 	@Temporal(TemporalType.TIMESTAMP)
+												// Insere o milisegundos		
 	private Date date = new java.sql.Date(System.currentTimeMillis());
 	
-	@ManyToOne
+	// Relacionando a entidade Postagem como many (muitas postagens) com a entidade Tema como one (um tema)
+	@ManyToOne	
+	// Serve para ignorar campos que contém em nossa resposta porém não existe em nosso modelo
 	@JsonIgnoreProperties("postagem")
 	private Tema tema;
 	
+	// Métodos getters and setters
 	public long getId() {
 		return id;
 	}

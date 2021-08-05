@@ -13,21 +13,40 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
+/* Informando que uma classe também é uma entidade. 
+ * A JPA estabelecerá a ligação entre a entidade e uma tabela de mesmo nome no banco de dados, onde os dados de
+ * objetos desse tipo poderão ser persistidos.
+ * Uma entidade representa, na Orientação a Objetos, uma tabela do banco de dados, e cada instância dessa entidade
+ * representa uma linha dessa tabela.
+ */
 @Entity
+//Atribuindo um nome para a tabela
 @Table(name = "tema")
 public class Tema {
 
+	// Primary key
 	@Id
+	/* Definindo que o campo será gerado automaticamente pelo banco de dados e o identity indica que o campo seguirá
+	 * com base no último registro. 
+	 */
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	// Indicando que o campo não pode ser nulo
 	@NotNull
 	private String descricao;
 	
+	// Relacionando a entidade Tema como one (um tema) com a entidade Postagem como many (muitas postagens)
+	// mappedBy ???
+	/* Permite excluir ou atualizar os registros relacionados presentes na tabela filha automaticamente, quando
+	 * um registro da tabela pai for atualizado (ON UPDATE) ou excluído (ON DELETE). 
+	 */
 	@OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties("tema")
+	// Cria uma lista de postagens
 	private List<Postagem> postagem;
+	
+	// Getters and Setters
 	public long getId() {
 		return id;
 	}
