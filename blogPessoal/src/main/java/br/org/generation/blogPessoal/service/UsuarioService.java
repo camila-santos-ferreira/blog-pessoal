@@ -12,86 +12,106 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import br.org.generation.blogPessoal.model.UserLogin;
 import br.org.generation.blogPessoal.model.Usuario;
+import br.org.generation.blogPessoal.model.UsuarioLogin;
 import br.org.generation.blogPessoal.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
 
 	@Autowired
-	private UsuarioRepository userRepository;
+	public UsuarioRepository usuarioRepository;
 	
-	public Optional<Usuario> CadastrarUsuario(Usuario usuario) {
+	// Método para cadastrar usuário
+	public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 		
-		if(userRepository.findByUsuario(usuario.getUsuario()).isPresent())
+		// Verificando se o usuário existe no banco de dados
+		if(usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
+			// Se o usuário já existir, séra lançada a exceção indicando que o usuário já existe
 			throw new ResponseStatusException(
-				HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
+				// Erro 400 com mensagem 
+				HttpStatus.BAD_REQUEST, "O usuário já existe!", null);
 		
+		// Period.between -> (data de hoje - data nascimento) = idade
 		int idade = Period.between(usuario.getDataNascimento(), LocalDate.now()).getYears();
-		
+		// Se for menor que 18 anos
 		if(idade < 18)
+			// Erro 400 pois usuário é menor de 18 anos
 			throw new ResponseStatusException(
-						HttpStatus.BAD_REQUEST, "Usuário menor de 18 anos", null);
+						HttpStatus.BAD_REQUEST, "O usuário é menor de 18 anos!", null);
 		
+		// Biblioteca commons codec para criptografar a senha
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		
+		// Vai pegar a senha do usuário
 		String senhaEncoder = encoder.encode(usuario.getSenha());
+		// Encodar a senha
 		usuario.setSenha(senhaEncoder);
 		
-		return Optional.of(userRepository.save(usuario));
+		// optional.of -> indica o que será retornado
+		return Optional.of(usuarioRepository.save(usuario));
 	}
 	
-		public Optional<Usuario> atualizarUsuario(Usuario usuarioLogin){
+	// Método para atualizar usuário
+	public Optional<Usuario> atualizarUsuario(Usuario usuario){
 		
-		if(userRepository.findById(usuarioLogin.getId()).isPresent()) {
-			int idade = Period.between(usuarioLogin.getDataNascimento(), LocalDate.now()).getYears();
+		if(usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent()) {
 			
+			// Period.between -> (data de hoje - data nascimento) = idade
+			int idade = Period. between(usuario.getDataNascimento(), LocalDate.now()).getYears();
+			// Se for menor que 18 anos
 			if(idade < 18)
+				// Erro 400 pois usuário é menor de 18 anos
 				throw new ResponseStatusException(
-					HttpStatus.BAD_REQUEST, "Usuário menor de 18 anos", null);
+					HttpStatus.BAD_REQUEST, "O usuário é menor de 18 anos!", null);
 					
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			
-			String senhaEncoder = encoder.encode(usuarioLogin.getSenha());
-			usuarioLogin.setSenha(senhaEncoder);
+			String senhaEncoder = encoder.encode(usuario.getSenha());
+			usuario.setSenha(senhaEncoder);
 			
-			return Optional.of(userRepository.save(usuarioLogin));
+			return Optional.of(usuarioRepository.save(usuario));
 		
+		// Retornar caso o usuário não existir
 		} else {
 			throw new ResponseStatusException(
-					HttpStatus.NOT_FOUND, "Usuário não encontrado!", null);	
-		}
-		
+				HttpStatus.NOT_FOUND, "Usuário não encontrado!", null);	
+		}		
 	}
 	
-	
-	public Optional<UserLogin> Logar(Optional<UserLogin> userLogin) {
+	public Optional<UsuarioLogin> logarUsuario(Optional<UsuarioLogin> usuarioLogin) {
+		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		Optional<Usuario> usuario = userRepository.findByUsuario(userLogin.get().getUsuario());
+			
+		// Procurar entre Usuario e usuarioLogin se o usuário existe dentro do banco
+		Optional<Usuario> usuario = usuarioRepository.findByUsuario(usuarioLogin.get().getUsuario());
 		
-		if(usuario.isPresent()) {
-			if(encoder.matches(userLogin.get().getSenha(), usuario.get().getSenha())) {
+			if(usuario.isPresent()) {
+			// matches -> faz a comparação das senhas	
+			if(encoder.matches(usuarioLogin.get().getSenha(), usuario.get().getSenha())) {
+				// Criar uma string através da concatenção de usuario e senha
+				String auth = usuarioLogin.get().getUsuario() + ":" + usuarioLogin.get().getSenha();
+				// encodeBase64 -> irá criptografar a concatenação
+				byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+				// Geração do token
+				String authHeader = "Basic " + new String(encodeAuth);
 			
-			String auth = userLogin.get().getUsuario() + ":" + userLogin.get().getSenha();
-			byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
-			String authHeader = "Basic " + new String(encodeAuth);
+				// Pega o id que está gravado dentro do banco e salva em usuarioLogin
+				usuarioLogin.get().setId(usuario.get().getId());
+				usuarioLogin.get().setNome(usuario.get().getNome());
+				usuarioLogin.get().setSenha(usuario.get().getSenha());
+				usuarioLogin.get().setToken(authHeader);
 			
-			userLogin.get().setId(usuario.get().getId());
-			userLogin.get().setNome(usuario.get().getNome());
-			userLogin.get().setSenha(usuario.get().getSenha());
-			userLogin.get().setToken(authHeader);
-			
-			return userLogin;
-			
+				return usuarioLogin;		
 		}
-	
 	}
-
 		throw new ResponseStatusException(
-				HttpStatus.UNAUTHORIZED, "Usuário ou senha inválidos!", null);
-		
+			HttpStatus.UNAUTHORIZED, "Usuário ou senha inválidos!", null);	
 	}
-	
-
+		
 }
+
+
+
+
+

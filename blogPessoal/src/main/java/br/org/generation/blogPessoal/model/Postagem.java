@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity
 // Atribuindo um nome para a tabela
-@Table(name = "postagem")
+@Table(name = "tb_postagens")
 public class Postagem {
 	
 	// Primary key
@@ -57,6 +57,10 @@ public class Postagem {
 	@JsonIgnoreProperties("postagem")
 	private Tema tema;
 	
+	@ManyToOne	
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;
+	
 	// Métodos getters and setters
 	public long getId() {
 		return id;
@@ -87,6 +91,12 @@ public class Postagem {
 	}
 	public void setTema(Tema tema) {
 		this.tema = tema;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 }

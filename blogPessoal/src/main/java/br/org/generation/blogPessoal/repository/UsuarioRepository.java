@@ -11,9 +11,10 @@ import br.org.generation.blogPessoal.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
+	// Optional -> torna a resposta do atributo opcional // Find -> select // By -> where
 	public Optional<Usuario> findByUsuario(String usuario);
 	
-	public List <Usuario> findAllByNomeContainingIgnoreCase (String nome);
+	public List<Usuario> findAllByNomeContainingIgnoreCase(String nome);
 	
 	public Optional <Usuario> findByNome(String nome);
 

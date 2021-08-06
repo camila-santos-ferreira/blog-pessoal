@@ -15,7 +15,6 @@ public class UserDetailsImpl implements UserDetails {
 	private String password;
 
 	public UserDetailsImpl(Usuario usuario) {
-		super();
 		this.userName = usuario.getUsuario();
 		this.password = usuario.getSenha();
 	}
@@ -34,7 +33,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return password;
+		return userName;
 	}
 
 	@Override

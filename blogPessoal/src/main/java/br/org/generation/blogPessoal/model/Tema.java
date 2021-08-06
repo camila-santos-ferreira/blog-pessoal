@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity
 //Atribuindo um nome para a tabela
-@Table(name = "tema")
+@Table(name = "tb_temas")
 public class Tema {
 
 	// Primary key
