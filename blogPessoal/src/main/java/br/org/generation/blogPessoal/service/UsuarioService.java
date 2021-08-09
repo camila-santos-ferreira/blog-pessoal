@@ -57,14 +57,21 @@ public class UsuarioService {
 		
 		if(usuarioRepository.findById(usuario.getId()).isPresent()) {
 			
-			// Period.between -> (data de hoje - data nascimento) = idade
-			int idade = Period. between(usuario.getDataNascimento(), LocalDate.now()).getYears();
-			// Se for menor que 18 anos
+			Optional<Usuario> buscaUsuario = usuarioRepository.findByUsuario(usuario.getUsuario());
+			
+			if( buscaUsuario.isPresent() ){
+
+				if(buscaUsuario.get().getId() != usuario.getId())
+					throw new ResponseStatusException(
+						HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
+			}
+
+			int idade = Period.between(usuario.getDataNascimento(), LocalDate.now()).getYears();
+			
 			if(idade < 18)
-				// Erro 400 pois usuário é menor de 18 anos
 				throw new ResponseStatusException(
-					HttpStatus.BAD_REQUEST, "O usuário é menor de 18 anos!", null);
-					
+						HttpStatus.BAD_REQUEST, "Usuário menor de 18 anos", null);
+			
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			
 			String senhaEncoder = encoder.encode(usuario.getSenha());
@@ -72,11 +79,11 @@ public class UsuarioService {
 			
 			return Optional.of(usuarioRepository.save(usuario));
 		
-		// Retornar caso o usuário não existir
-		} else {
+		}else {		
 			throw new ResponseStatusException(
-				HttpStatus.NOT_FOUND, "Usuário não encontrado!", null);	
-		}		
+					HttpStatus.NOT_FOUND, "Usuário não encontrado!", null);		
+		}
+		
 	}
 	
 	public Optional<UsuarioLogin> logarUsuario(Optional<UsuarioLogin> usuarioLogin) {
