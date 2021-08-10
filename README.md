@@ -1,0 +1,42 @@
+## Projeto Blog Pessoal
+
+### Etapas Concluídas:
+- [x] Criação do Projeto Spring  
+- [x] Configuração das Dependências do Projeto  
+  - Spring Web
+  - Spring Boot Dev Tools
+  - Spring Data JPA
+  - MySQL Connector
+  - Validation
+  - Spring Security
+  - Commons Codec
+- [x] Configuração do Banco de Dados
+  - application.properties
+- [x] Criação das Camadas Model
+  - Postagem
+  - Tema
+  - Usuario
+  - UsuarioLogin
+- [x] Criação do Relacionamento
+  - (One to Many) - Classe Tema com a Classe Postagem
+  - (Many to one) - Classe Postagem com a Classe Tema
+  - (One to Many) - Classe Usuario com a Classe Postagem
+  - (Many to one) - Classe Postagem com a Classe Usuario
+- [x] Criação da Camada Repository
+  - PostagemRepository
+  - UsuarioRepository 
+  - TemaRepository
+- [x] Criação da Camada Controller
+  - PostagemController
+  - UsuarioController
+  - TemaController
+- [x] Criação da Camada Security
+  - BasicSecurityConfig
+  - UserDetailsImpl 
+  - UserDetailsService 
+- [x] Criação da Camada Service
+  - UsuarioService 
+- [x] Testes executados no Postman
+  - POST, PUT, GET e DELETE de usuários
+  - POST, PUT, GET e DELETE de categorias
+  - POST, PUT, GET e DELETE de postagens
