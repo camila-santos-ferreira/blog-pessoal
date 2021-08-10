@@ -73,5 +73,5 @@
   - POST, PUT, GET e DELETE de postagens
 
 ### Deploy (Implantação)
-   ✔ Heroku - em andamento
+   ❗ Heroku - em andamento
    
