@@ -71,3 +71,7 @@
   - POST, PUT, GET e DELETE de usuários
   - POST, PUT, GET e DELETE de categorias
   - POST, PUT, GET e DELETE de postagens
+
+### Deploy (Implantação)
+   ❗ Heroku - em andamento
+   
