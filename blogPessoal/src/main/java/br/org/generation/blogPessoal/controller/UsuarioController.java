@@ -77,7 +77,7 @@ public class UsuarioController {
 	}
 		
 		@DeleteMapping("/{id}")
-		public void deleteTema(@PathVariable long id) {
+		public void deleteUsuario(@PathVariable long id) {
 
 			Optional<Usuario> usuario = usuarioRepository.findById(id);
 			
