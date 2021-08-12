@@ -76,17 +76,5 @@ public class UsuarioController {
 				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
 	}
 		
-		@DeleteMapping("/{id}")
-		public void deleteUsuario(@PathVariable long id) {
-
-			Optional<Usuario> usuario = usuarioRepository.findById(id);
-			
-			if (usuario.isPresent()) {
-				usuarioRepository.deleteById(id);
-			}else{
-				throw new ResponseStatusException(
-			          	HttpStatus.NOT_FOUND, "Usuário não encontrado!", null);
-			}
-	}
 	
 }
