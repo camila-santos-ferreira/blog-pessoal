@@ -1,4 +1,4 @@
-bl# Projeto Blog Pessoal 
+# Projeto Blog Pessoal 
 
 ## Etapas Concluídas:
 
