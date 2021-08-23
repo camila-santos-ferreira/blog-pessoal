@@ -1,7 +1,6 @@
 package br.org.generation.blogPessoal.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,97 +61,9 @@ public class PostagemController {
 	 * Como o Método sempre irá criar a List independente ter ou não valores na tabela, ele sempre
 	 * retornará 200.
 	 */
-	@GetMapping
+	@GetMapping("/all")
 	public ResponseEntity<List<Postagem>> GetAll() {
 		return ResponseEntity.ok(postagemRepository.findAll());
-	}
-
-	/* Listar postagem por id - Forma 01: Usando if/else
-	 *  
-	 * @GetMapping("idifelse/{id}"): Annotation (Anotação), que indica que o método abaixo responderá todas
-	 * as requisições do tipo GET que forem enviadas no endpoint /postagens/ifelse/id
-	 * 
-	 * O Método getByIdIfElse(@PathVariable long id) será do tipo ResponseEntity porque ele responderá a 
-	 * requisição (Request), com uma HTTP Response (Resposta http), neste caso Response Status 200 => OK, 
-	 * caso a Postagem seja encontrada. Caso não seja encontrada, a resposta será Not Found => 404
-	 * 
-	 * /@PathVariable long id: Anntotation (anotação) que insere a variável de path (caminho ou url do endpoint), 
-	 * passada no endereço da requisição, e insere no parâmetro id do método getByIdIfElse
-	 * 
-	 * Exemplo
-	 * 
-	 * http://localhost:8080/postagens/idifelse/1
-	 * 
-	 * o parâmetro id do método receberá 1 (Id que será procurado na tabela postagens via findById())
-	 * 
-	 * <Postagem>: Como o Método listará apenas 1 registro da nossa tabela, o método retornará 
-	 * dentro da resposta um objeto do tipo Postagem, que são os dados da tabela.
-	 * 
-	 * Optional<Postagem> postagem = postagemRepository.findById(id);: Cria um objeto do tipo Postagem
-	 * e armazena o resultado do método findById(id), que é um método padrão da interface JpaRepository
-	 * O Optional serve para evitar o erro NullPointerException (Objeto nulo), caso a Postagem não seja 
-	 * encontrada na tabela.
-	 * 
-	 * if (postagem.isPresent()): verifica se a Postagem existe
-	 * 
-	 * return ResponseEntity.ok(postagem.get());: Se a postagem existir, retorna o status OK = 200
-	 * 
-	 * return ResponseEntity.notFound().build();: Se a postagem não for encontrada, retorna o status 
-	 * Not Found = 404
-	 */
-	@GetMapping("idifelse/{id}")
-	public ResponseEntity<Postagem> getByIdIfElse(@PathVariable long id) {
-
-		Optional<Postagem> postagem = postagemRepository.findById(id);
-		if (postagem.isPresent()) {
-			return ResponseEntity.ok(postagem.get());
-		}
-		return ResponseEntity.notFound().build();
-	}
-
-	/* Listar postagem por id - Forma 02: Usando try/catch
-	 *  
-	 * @GetMapping("idtrycatch/{id}"): Annotation (Anotação), que indica que o método abaixo responderá todas
-	 * as requisições do tipo GET que forem enviadas no endpoint /postagens/ifelse/id
-	 * 
-	 * O Método getByIdTryCatch(@PathVariable long id) será do tipo ResponseEntity porque ele responderá a 
-	 * requisição (Request), com uma HTTP Response (Resposta http), neste caso Response Status 200 => OK, 
-	 * caso a Postagem seja encontrada. Caso não seja encontrada, a resposta será Not Found => 404
-	 * 
-	 * /@PathVariable long id: Anntotation (anotação) que insere a variável de path (caminho ou url do endpoint), 
-	 * passada no endereço da requisição, e insere no parâmetro id do método getByIdTryCatch
-	 * 
-	 * Exemplo
-	 * 
-	 * http://localhost:8080/postagens/idtrycatch/1
-	 * 
-	 * o parâmetro id do método receberá 1 (Id que será procurado na tabela postagens via findById(id))
-	 * 
-	 * <Postagem>: Como o Método listará apenas 1 registro da nossa tabela, o método retornará 
-	 * dentro da resposta um objeto do tipo Postagem, que são os dados da tabela.
-	 * 
-	 * Optional<Postagem> postagem = postagemRepository.findById(id);: Cria um objeto do tipo Postagem
-	 * e armazena o resultado do método findById(id), que é um método padrão da interface JpaRepository
-	 * O Optional serve para evitar o erro NullPointerException (Objeto nulo), caso a Postagem não seja 
-	 * encontrada na tabela.
-	 * 
-	 * Try/Catch: verifica se houve algum erro na execução do método findById(id) (A Postagem existe?)
-	 * 
-	 * return ResponseEntity.ok(postagem.get());: Se a postagem existir, retorna o status OK = 200
-	 * 
-	 * return ResponseEntity.notFound().build();: Se a postagem não for encontrada (erro!), retorna o status 
-	 * Not Found = 404
-	 */
-	@GetMapping("/idtrycatch/{id}")
-	public ResponseEntity<Postagem> getByIdTryCatch(@PathVariable long id) {
-
-		Optional<Postagem> postagem = postagemRepository.findById(id);
-		try {
-			return ResponseEntity.ok(postagem.get());
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
-
 	}
 
 	
@@ -252,7 +163,7 @@ public class PostagemController {
 	 * 
 	 * Ao fazer o envio dos dados via Postman ou front-end, não é necessário passar o Id e a Data
 	 */
-	@PostMapping
+	@PostMapping("/postar")
 	public ResponseEntity<Postagem> postPostagem(@RequestBody Postagem postagem) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 	}
@@ -279,7 +190,7 @@ public class PostagemController {
 	 * Ao fazer o envio dos dados via Postman ou front-end é necessário passar o Id para identificar qual
 	 * Postagem será atualizada. Caso o Id não seja passadao, o Spring criará um novo registro na tabela
 	 */
-	@PutMapping
+	@PutMapping("/atualizar")
 	public ResponseEntity<Postagem> putPostagem(@RequestBody Postagem postagem) {
 		return ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
 	}

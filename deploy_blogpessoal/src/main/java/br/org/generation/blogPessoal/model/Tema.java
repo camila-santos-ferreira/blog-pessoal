@@ -35,7 +35,7 @@ public class Tema {
 	
 	// Indicando que o campo não pode ser nulo
 	@NotNull
-	@Size(min = 5, max = 25)
+	@Size(min = 2, max = 25)
 	private String descricao;
 	
 	// Relacionando a entidade Tema como one (um tema) com a entidade Postagem como many (muitas postagens)
