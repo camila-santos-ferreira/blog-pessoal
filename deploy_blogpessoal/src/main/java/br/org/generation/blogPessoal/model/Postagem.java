@@ -35,15 +35,15 @@ public class Postagem {
 	private long id;
 	
 	// Indicando que o campo não pode ser nulo
-	@NotNull
+	@NotNull(message = "Título obrigatório!")
 	// Definindo o tamanho mínimo e máximo de um campo
-	@Size(min = 5, max = 100)
+	@Size(min = 5, max = 100, message = "Tamanho mínimo = 5 e tamanho máximo = 100")
 	private String titulo;
 	
 	// Indicando que o campo não pode ser nulo
-	@NotNull
+	@NotNull(message = "Texto obrigatório!")
 	// Definindo o tamanho mínimo e máximo de um campo
-	@Size(min = 10, max = 500)
+	@Size(min = 10, max = 500, message = "Tamanho mínimo = 10 e tamanho máximo = 500!")
 	private String texto;
 	
 	// Indica que o atributo receberá uma data e hora do sistema
